@@ -1,0 +1,26 @@
+{
+  "name": "chips",
+  "version": "0.0.0",
+  "description": "chips =====",
+  "main": "index.html",
+  "scripts": {
+    "test": "grunt mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sandyw/chips.git"
+  },
+  "keywords": [
+    "automata"
+  ],
+  "author": "sandyw",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sandyw/chips/issues"
+  },
+  "homepage": "https://github.com/sandyw/chips",
+  "devDependencies": {
+    "grunt": "^0.4.3",
+    "grunt-mocha": "^0.4.10"
+  }
+}
