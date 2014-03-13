@@ -1,7 +1,7 @@
 module.exports = (grunt) ->
   grunt.initConfig
     meta:
-      src: 'src/**/*.js'
+      src: 'output/**/*.js'
       specs: 'spec/**/*.js'
 
     watch:
@@ -12,13 +12,17 @@ module.exports = (grunt) ->
       src: '<%= meta.src %>'
       options:
         specs: '<%= meta.specs %>'
-        vendor: 'vendor/js/jasmine-given.js'
+        vendor: [
+          'bower_components/jquery/dist/jquery.js',
+          'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
+          'bower_components/jasmine-fixture/dist/jasmine-fixture.js'
+        ]
 
     coffee:
       compile:
         files:
-          'src/kata_src.js': ['src/*.coffee']
-          'spec/kata_spec.js': ['spec/*.coffee']
+          'output/application.js': ['src/*.coffee']
+          'spec/application_spec.js': ['spec/*.coffee']
 
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-contrib-coffee')
