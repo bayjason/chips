@@ -5,9 +5,22 @@ class window.ChipBoard
     for x in [0..@x-1]
       @chips[x] = []
       for y in [0..@y-1]
-        @chips[x][y] = null
+        @addChips(x, y, 0)
 
-  addChip: (x, y) ->
-    @chips[x][y] = new Chip()
+  addChips: (x, y, height) ->
+    @chips[x][y] = new ChipStack(this, height, [x,y])
 
-module.exports = ChipBoard
+  iterate: ->
+    for x in [0..@x-1]
+      for y in [0..@y-1]
+        @chips[x][y].fire()
+
+  neighbors: (chip) ->
+    coordinates = chip.coordinates
+    [
+      @chips[coordinates[0]][coordinates[1] - 1],
+      @chips[coordinates[0] + 1][coordinates[1]],
+      @chips[coordinates[0]][coordinates[1] + 1],
+      @chips[coordinates[0] - 1][coordinates[1]]
+    ]
+

@@ -13,10 +13,12 @@ describe 'ChipBoard', ->
           expect(@board.chips[x] instanceof Array).toBeTruthy()
           expect(@board.chips[x].length).toBe(100)
 
-      it "sets all cells to null", ->
+      it "sets all cells to an empty chipStack", ->
         for x in [0...99]
           for y in [0...99]
-            expect(@board.chips[x][y]).toBe(null)
+            expect(@board.chips[x][y] instanceof ChipStack).toBeTruthy()
+            expect(@board.chips[x][y].height).toBe(0)
+            expect(@board.chips[x][y].coordinates).toEqual [x, y]
 
     describe "DOM", ->
       beforeEach ->
@@ -26,8 +28,48 @@ describe 'ChipBoard', ->
       it "draws itself on a canvas element", ->
         expect($('#chips')).toContainElement('canvas')
 
-  describe "game", ->
-    it "can add a cell to the board", ->
+  describe "addChips", ->
+    beforeEach ->
       @board = new ChipBoard(5,5)
-      @board.addChip(0, 0)
-      expect(@board.chips[0][0] instanceof Chip).toBeTruthy()
+
+    it "can add chips to the board", ->
+      @board.addChips(0, 0, 5)
+      expect(@board.chips[0][0] instanceof ChipStack).toBeTruthy()
+
+    it "sets the height of the stack", ->
+      @board.addChips(0, 0, 5)
+      expect(@board.chips[0][0].height).toBe(5)
+
+    it "sets the coordinates of the stack", ->
+      @board.addChips(0, 0, 5)
+      expect(@board.chips[0][0].coordinates[0]).toBe(0)
+      expect(@board.chips[0][0].coordinates[1]).toBe(0)
+
+  describe "iterate", ->
+    beforeEach ->
+      @board = new ChipBoard(5,5)
+
+    it "tells each stack to fire", ->
+      @board.addChips(0, 0, 5)
+      @board.addChips(0, 1, 5)
+
+      spyOn(@board.chips[0][0], 'fire')
+      spyOn(@board.chips[0][1], 'fire')
+      @board.iterate()
+      expect(@board.chips[0][0].fire).toHaveBeenCalled()
+      expect(@board.chips[0][1].fire).toHaveBeenCalled()
+
+  describe "neighbors", ->
+    beforeEach ->
+      @board = new ChipBoard(9, 9)
+      @chip = @board.addChips(4,4, 5)
+
+    it "has 4 neighbors", ->
+      expect(@board.neighbors(@chip).length).toBe(4)
+
+    it "returns the list of a stack's neighbors", ->
+      neighbors = @board.neighbors(@chip)
+      expect(neighbors[0].coordinates).toEqual([4, 3])
+      expect(neighbors[1].coordinates).toEqual([5, 4])
+      expect(neighbors[2].coordinates).toEqual([4, 5])
+      expect(neighbors[3].coordinates).toEqual([3, 4])
