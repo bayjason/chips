@@ -1,7 +1,7 @@
 (function() {
   describe('ChipBoard', function() {
     describe("constructor", function() {
-      describe("board", function() {
+      return describe("board", function() {
         beforeEach(function() {
           return this.board = new ChipBoard(100, 100);
         });
@@ -18,7 +18,7 @@
           }
           return _results;
         });
-        return it("sets all cells to an empty chipStack", function() {
+        it("sets all cells to an empty chipStack", function() {
           var x, y, _i, _results;
           _results = [];
           for (x = _i = 0; _i < 99; x = ++_i) {
@@ -35,14 +35,8 @@
           }
           return _results;
         });
-      });
-      return describe("DOM", function() {
-        beforeEach(function() {
-          affix('#chips');
-          return this.board = new ChipBoard;
-        });
-        return it("draws itself on a canvas element", function() {
-          return expect($('#chips')).toContainElement('canvas');
+        return it("initializes a renderer instance", function() {
+          return expect(this.board.renderer instanceof Renderer).toBe(true);
         });
       });
     });
@@ -76,6 +70,19 @@
         this.board.iterate();
         expect(this.board.chips[0][0].fire).toHaveBeenCalled();
         return expect(this.board.chips[0][1].fire).toHaveBeenCalled();
+      });
+    });
+    describe("draw", function() {
+      beforeEach(function() {
+        this.board = new ChipBoard(5, 5);
+        this.draw = spyOn(this.board.renderer, 'draw');
+        this.board.addChips(0, 0, 5);
+        return this.board.addChips(0, 1, 5);
+      });
+      return it("iterates over each chip, telling the renderer to draw it", function() {
+        this.board.draw();
+        expect(this.draw).toHaveBeenCalledWith(this.board.chips[0][0]);
+        return expect(this.draw).toHaveBeenCalledWith(this.board.chips[0][1]);
       });
     });
     return describe("neighbors", function() {
@@ -147,6 +154,21 @@
         this.stack = new ChipStack(null, 5, [0, 0]);
         this.stack.grow();
         return expect(this.stack.height).toBe(6);
+      });
+    });
+  });
+
+}).call(this);
+
+(function() {
+  describe("Renderer", function() {
+    return describe("constructor", function() {
+      beforeEach(function() {
+        affix('#chips');
+        return this.renderer = new Renderer;
+      });
+      return it("creates a canvas for itself", function() {
+        return expect($('#chips')).toContainElement('canvas');
       });
     });
   });

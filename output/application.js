@@ -5,6 +5,7 @@
       this.x = x;
       this.y = y;
       this.chips = [];
+      this.renderer = new Renderer();
       $('#chips').append('<canvas></canvas>');
       for (x = _i = 0, _ref = this.x - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; x = 0 <= _ref ? ++_i : --_i) {
         this.chips[x] = [];
@@ -27,6 +28,22 @@
           _results1 = [];
           for (y = _j = 0, _ref1 = this.y - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; y = 0 <= _ref1 ? ++_j : --_j) {
             _results1.push(this.chips[x][y].fire());
+          }
+          return _results1;
+        }).call(this));
+      }
+      return _results;
+    };
+
+    ChipBoard.prototype.draw = function() {
+      var x, y, _i, _ref, _results;
+      _results = [];
+      for (x = _i = 0, _ref = this.x - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; x = 0 <= _ref ? ++_i : --_i) {
+        _results.push((function() {
+          var _j, _ref1, _results1;
+          _results1 = [];
+          for (y = _j = 0, _ref1 = this.y - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; y = 0 <= _ref1 ? ++_j : --_j) {
+            _results1.push(this.renderer.draw(this.chips[x][y]));
           }
           return _results1;
         }).call(this));
@@ -77,6 +94,20 @@
     };
 
     return ChipStack;
+
+  })();
+
+}).call(this);
+
+(function() {
+  window.Renderer = (function() {
+    function Renderer() {
+      $('#chips').append('<canvas></canvas>');
+    }
+
+    Renderer.prototype.draw = function() {};
+
+    return Renderer;
 
   })();
 

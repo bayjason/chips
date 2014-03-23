@@ -20,13 +20,8 @@ describe 'ChipBoard', ->
             expect(@board.chips[x][y].height).toBe(0)
             expect(@board.chips[x][y].coordinates).toEqual [x, y]
 
-    describe "DOM", ->
-      beforeEach ->
-        affix('#chips')
-        @board = new ChipBoard
-
-      it "draws itself on a canvas element", ->
-        expect($('#chips')).toContainElement('canvas')
+      it "initializes a renderer instance", ->
+        expect(@board.renderer instanceof Renderer).toBe(true)
 
   describe "addChips", ->
     beforeEach ->
@@ -58,6 +53,18 @@ describe 'ChipBoard', ->
       @board.iterate()
       expect(@board.chips[0][0].fire).toHaveBeenCalled()
       expect(@board.chips[0][1].fire).toHaveBeenCalled()
+
+  describe "draw", ->
+    beforeEach ->
+      @board = new ChipBoard(5,5)
+      @draw = spyOn(@board.renderer, 'draw')
+      @board.addChips(0, 0, 5)
+      @board.addChips(0, 1, 5)
+
+    it "iterates over each chip, telling the renderer to draw it", ->
+      @board.draw()
+      expect(@draw).toHaveBeenCalledWith(@board.chips[0][0])
+      expect(@draw).toHaveBeenCalledWith(@board.chips[0][1])
 
   describe "neighbors", ->
     beforeEach ->
