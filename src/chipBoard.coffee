@@ -1,7 +1,7 @@
 class window.ChipBoard
   constructor: (@x, @y) ->
     @chips = []
-    @renderer = new Renderer(@x, @y)
+    @renderer = new Renderer(@x, @y, this)
     for x in [0..@x-1]
       @chips[x] = []
       for y in [0..@y-1]
@@ -11,7 +11,11 @@ class window.ChipBoard
     setInterval(@update, 100)
 
   addChips: (x, y, height) ->
-    @chips[x][y] = new ChipStack(this, height, [x,y])
+    if @chips[x][y] == undefined
+      @chips[x][y] = new ChipStack(this, height, [x,y])
+    else
+      @chips[x][y].height += height
+    @chips[x][y]
 
   update: =>
     @iterate()

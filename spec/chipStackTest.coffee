@@ -32,9 +32,7 @@ describe 'ChipStack', ->
 
     it "does nothing if its height < 4", ->
       @stack.height = 3
-      spyOn(@board, 'addChips')
       @stack.fire()
-      expect(@board.addChips).not.toHaveBeenCalled()
       expect(@stack.height).toBe(3)
 
   describe 'grow', ->

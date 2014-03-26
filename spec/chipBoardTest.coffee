@@ -24,6 +24,7 @@ describe 'ChipBoard', ->
         expect(@board.renderer instanceof Renderer).toBe(true)
         expect(@board.renderer.x).toBe(5)
         expect(@board.renderer.y).toBe(5)
+        expect(@board.renderer.board).toBe(@board)
 
   describe "setInterval", ->
     beforeEach ->
@@ -65,6 +66,15 @@ describe 'ChipBoard', ->
       @board.addChips(0, 0, 5)
       expect(@board.chips[0][0].coordinates[0]).toBe(0)
       expect(@board.chips[0][0].coordinates[1]).toBe(0)
+
+    it "can add to the height of the stack", ->
+      @board.addChips(0, 0, 1)
+      @board.addChips(0, 0, 5)
+      expect(@board.chips[0][0].height).toBe(6)
+
+    it "returns the stack", ->
+      expect(@board.addChips(0, 0, 1) instanceof ChipStack).toBeTruthy()
+
 
   describe "iterate", ->
     beforeEach ->

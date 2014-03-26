@@ -8,7 +8,7 @@
       this.y = y;
       this.update = __bind(this.update, this);
       this.chips = [];
-      this.renderer = new Renderer(this.x, this.y);
+      this.renderer = new Renderer(this.x, this.y, this);
       for (x = _i = 0, _ref = this.x - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; x = 0 <= _ref ? ++_i : --_i) {
         this.chips[x] = [];
         for (y = _j = 0, _ref1 = this.y - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; y = 0 <= _ref1 ? ++_j : --_j) {
@@ -22,7 +22,12 @@
     };
 
     ChipBoard.prototype.addChips = function(x, y, height) {
-      return this.chips[x][y] = new ChipStack(this, height, [x, y]);
+      if (this.chips[x][y] === void 0) {
+        this.chips[x][y] = new ChipStack(this, height, [x, y]);
+      } else {
+        this.chips[x][y].height += height;
+      }
+      return this.chips[x][y];
     };
 
     ChipBoard.prototype.update = function() {
@@ -123,16 +128,23 @@
 
 (function() {
   window.Renderer = (function() {
-    function Renderer(x, y) {
-      var canvas;
+    function Renderer(x, y, board) {
       this.x = x;
       this.y = y;
-      canvas = $('<canvas/>').attr({
+      this.board = board;
+      this.canvas = $('<canvas/>').attr({
         width: this.x * 5,
         height: this.y * 5
       });
-      $('#chips').append(canvas);
-      this.context = canvas[0].getContext('2d');
+      $('#chips').append(this.canvas);
+      this.context = this.canvas[0].getContext('2d');
+      $('canvas').on('click', (function(_this) {
+        return function(e) {
+          var coords;
+          coords = _this.coordinatesOf(e.pageX, e.pageY);
+          return _this.board.addChips(coords[0], coords[1], 1);
+        };
+      })(this));
     }
 
     Renderer.prototype.draw = function(chips) {
@@ -151,6 +163,10 @@
       color = (height * 5 + 155).toString(16);
       color = String('0' + color).slice(-2);
       return "#" + color + color + color;
+    };
+
+    Renderer.prototype.coordinatesOf = function(pageX, pageY) {
+      return [Math.round((pageX - this.canvas[0].offsetLeft) / 5), Math.round((pageY - this.canvas[0].offsetTop) / 5)];
     };
 
     return Renderer;
